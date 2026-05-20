@@ -20,7 +20,9 @@ pipeline {
         
             stage('Package') {
                 steps {
-                    sh 'mvn clean package'    
+					sh 'ls -la'
+					sh 'mvn clean'
+                    sh 'mvn package'    
     		            echo "Maven Package Goal Executed Successfully!";
     		            sh  'ls -la'
                 }
