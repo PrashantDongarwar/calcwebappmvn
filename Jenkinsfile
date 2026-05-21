@@ -1,15 +1,15 @@
 pipeline {   
     agent {
-        label 'linux' 
+        label 'ag-2' 
     }
 	    environment {
         IMAGE_NAME = "calcwebappmvn:${BUILD_NUMBER}"
     }
 
-     // tools {
-     //    maven 'xyz-maven'
+      tools {
+         maven 'xyz-maven'
      //    dockerTool 'my-docker'
-     // }
+      }
     stages {
         stage('Git Checkout') {
             steps {
@@ -59,10 +59,10 @@ pipeline {
     }
     post {
         success {
-            echo 'This will run only if successful'
+            echo 'pipeline is successful'
         }
         failure {
-            echo 'This will run only if failed'
+            echo 'pipeline is FAILED'
         }
     }
 }
