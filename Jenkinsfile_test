@@ -1,20 +1,31 @@
 
 pipeline{
-    agent label 'linux'
+
+    agent {
+        label 'linux'
+
+    }
+    
     stages{
-        stage('Build1'){
+        stage('Checkout'){
+            steps{
+                echo 'Checking out the code...'
+                // Add your checkout commands here
+            }
+        }
+        stage('Build'){
             steps{
                 echo 'Building the application...'
                 // Add your build commands here
             }
         }
-        stage('Test1'){
+        stage('Test'){
             steps{
                 echo 'Running tests...'
                 // Add your test commands here
             }
         }
-        stage('Deploy1'){
+        stage('Deploy'){
             steps{
                 echo 'Deploying the application...'
                 // Add your deploy commands here
