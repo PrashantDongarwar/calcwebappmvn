@@ -13,10 +13,19 @@ pipeline{
                 // Add your checkout commands here
             }
         }
-        stage('Build'){
+        stage('Source Analysis'){
             steps{
-                echo 'Building the application...'
-                // Add your build commands here
+                echo 'Analyzing source code...'
+                // Add your source analysis commands here
+            }
+        }
+        stage('Build artifacts'){
+            steps{
+                sh 'ls -la'
+                sh 'mvn clean'
+                sh 'mvn package'
+                echo "Maven Package Goal Executed Successfully!";
+                sh 'ls -la'
             }
         }
         stage('Test'){
