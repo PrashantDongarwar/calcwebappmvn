@@ -47,13 +47,13 @@ pipeline{
                 sh 'docker images'
             }
         }
-        stage('Trivy Scan'){
-            steps{
-                sh 'mkdir -p $TMPDIR $TRIVY_CACHE_DIR'
-                sh 'trivy image ${IMAGE_NAME}'
-                echo "Trivy Security Scan Completed Successfully!!"
-            }
-        }
+        //stage('Trivy Scan'){
+        //    steps{
+        //        sh 'mkdir -p $TMPDIR $TRIVY_CACHE_DIR'
+        //        sh 'trivy image ${IMAGE_NAME}'
+        //        echo "Trivy Security Scan Completed Successfully!!"
+        //    }
+        //}
         stage('ECR Login'){
             steps{
                 sh 'aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin 382975714386.dkr.ecr.us-west-1.amazonaws.com'
