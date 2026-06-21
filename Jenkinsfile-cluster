@@ -3,7 +3,7 @@ pipeline {
         label 'linux'
 
     environment {
-        my_aws_access= credentials('aws-access')
+        my_aws_access= credentials('aws_credentials')
     }
 
     tools {
