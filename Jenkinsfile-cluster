@@ -1,6 +1,8 @@
 pipeline {
+    
     agent {
         label 'linux'
+    }
 
     environment {
         my_aws_access= credentials('aws_credentials')
