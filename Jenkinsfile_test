@@ -7,6 +7,9 @@ pipeline{
     }
     environment {
         IMAGE_NAME = "calcwebappmvn:${BUILD_NUMBER}"
+        TMPDIR = "/var/lib/jenkins/trivy-tmp"
+        TRIVY_CACHE_DIR = "/var/lib/jenkins/trivy-cache"
+        Region = "us-west-1"
     }
     stages{
         stage('Checkout'){
@@ -44,10 +47,26 @@ pipeline{
                 sh 'docker images'
             }
         }
-        stage('Test'){
+        stage('Trivy Scan'){
             steps{
-                echo 'Running tests...'
-                // Add your test commands here
+                sh 'mkdir -p $TMPDIR $TRIVY_CACHE_DIR'
+                sh 'trivy image ${IMAGE_NAME}'
+                echo "Trivy Security Scan Completed Successfully!!"
+            }
+        }
+        stage('ECR Login'){
+            steps{
+                sh 'aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin 382975714386.dkr.ecr.us-west-1.amazonaws.com'
+                echo "Logged in to ECR Successfully!!"
+
+                sh 'docker tag ${IMAGE_NAME} 382975714386.dkr.ecr.us-west-1.amazonaws.com/${IMAGE_NAME}'
+                echo "Docker Image Tagged Successfully!!"
+                sh 'docker images'
+
+        stage('Push to ECR'){
+            steps{
+                sh 'docker push 382975714386.dkr.ecr.us-west-1.amazonaws.com/${IMAGE_NAME}'
+                echo "Docker Image Pushed to ECR Successfully!!"
             }
         }
         stage('Deploy'){
