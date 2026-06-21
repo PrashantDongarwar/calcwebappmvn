@@ -10,6 +10,7 @@ pipeline{
         TMPDIR = "/var/lib/jenkins/trivy-tmp"
         TRIVY_CACHE_DIR = "/var/lib/jenkins/trivy-cache"
         Region = "us-west-1"
+        //my_aws_access = credentials('aws_credentials')
     }
     stages{
         stage('Checkout'){
