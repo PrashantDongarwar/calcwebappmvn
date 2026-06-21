@@ -109,8 +109,14 @@ pipeline{
                 sh 'sleep 20'
                 sh 'kubectl get svc -o wide'
                 echo ".war application deployed to EKS cluster successfully!!"
+            }
+        }
+    }
+    
 
-        post {
+
+
+    post {   
         success {
             echo 'pipeline is successful'
         }
@@ -120,7 +126,7 @@ pipeline{
         always {
             echo 'pipeline is completed'
             cleanWs()
-            }
         }
     }
+    
 }
