@@ -62,7 +62,8 @@ pipeline{
                 sh 'docker tag ${IMAGE_NAME} 382975714386.dkr.ecr.us-west-1.amazonaws.com/${IMAGE_NAME}'
                 echo "Docker Image Tagged Successfully!!"
                 sh 'docker images'
-
+            }
+        }
         stage('Push to ECR'){
             steps{
                 sh 'docker push 382975714386.dkr.ecr.us-west-1.amazonaws.com/${IMAGE_NAME}'
@@ -76,6 +77,4 @@ pipeline{
             }
         }
     }
-
-
 }
