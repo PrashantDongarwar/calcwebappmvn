@@ -5,7 +5,7 @@ pipeline {
     }
 
     environment {
-        my_aws_access= credentials('aws_credentials')
+        my_aws_access= credentials('cluster access')
     }
 
     tools {
