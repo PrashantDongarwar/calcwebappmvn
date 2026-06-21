@@ -5,7 +5,9 @@ pipeline{
         label 'linux'
 
     }
-    
+    environment {
+        IMAGE_NAME = "calcwebappmvn:${BUILD_NUMBER}"
+    }
     stages{
         stage('Checkout'){
             steps{
@@ -26,6 +28,20 @@ pipeline{
                 sh 'mvn package'
                 echo "Maven Package Goal Executed Successfully!";
                 sh 'ls -la'
+            }
+        }
+        stage('Build Docker Image'){
+            steps{
+                sh 'which docker'
+                sh 'docker --version'
+                sh 'docker ps'
+                sh 'docker images'
+                //sh 'docker rmi -f ${docker images -q}'
+                //docker system prune -a
+                // sh 'docker build -t calcwebappmvn:v1 .' 
+                sh 'docker build -t ${IMAGE_NAME} .'
+                echo "Docker Image Built Successfully!!"
+                sh 'docker images'
             }
         }
         stage('Test'){
