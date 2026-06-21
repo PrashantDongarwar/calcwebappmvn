@@ -3,14 +3,19 @@ pipeline{
 
     agent {
         label 'linux'
-
     }
+
+    tools {
+        terraform 'tf-install'
+    }
+
     environment {
         IMAGE_NAME = "prod_ecr:${BUILD_NUMBER}"
         TMPDIR = "/var/lib/jenkins/trivy-tmp"
         TRIVY_CACHE_DIR = "/var/lib/jenkins/trivy-cache"
         Region = "us-west-1"
         my_aws_access = credentials('aws_credentials')
+        cluster_name = "my-cluster-mp"
     }
     stages{
         stage('Checkout'){
@@ -71,10 +76,50 @@ pipeline{
                 echo "Docker Image Pushed to ECR Successfully!!"
             }
         }
-        stage('Deploy'){
+        stage('kubeconfig setup') {
+            steps {
+                sh 'aws eks update-kubeconfig --region ${Region} --name ${cluster_name}'
+                // sh '''kubectl create secret docker-registry my-ecr-secret-cbz \
+                //       --docker-server=964742912902.dkr.ecr.${Region}.amazonaws.com \
+                //       --docker-username=AWS \
+                //       --docker-password=$(aws ecr get-login-password --region ${Region})'''
+
+                
+                echo "Kubeconfig setup and secret creation completed successfully!!"
+            }
+        }
+
+        stage('get all resources') {
+            steps {
+
+                sh 'kubectl get all'
+                sh 'kubectl get secrets'
+                echo "Verified access to EKS cluster successfully!!"
+
+                //sh 'kubectl apply -f k8s-deployment.yaml'
+                //echo "Application Deployed to EKS Successfully!!"
+            }
+        }
+
+        stage('Deploy to EKS') {
             steps{
-                echo 'Deploying the application...'
-                // Add your deploy commands here
+                sh 'sed -i "s#image:.*#image: 382975714386.dkr.ecr.us-west-1.amazonaws.com/${IMAGE_NAME}#g" calc-deployment-svc.yaml'
+                sh 'kubectl apply -f calc-deployment-svc.yaml'
+                sh 'kubectl get all'
+                sh 'sleep 20'
+                sh 'kubectl get svc -o wide'
+                echo ".war application deployed to EKS cluster successfully!!"
+
+        post {
+        success {
+            echo 'pipeline is successful'
+        }
+        failure {
+            echo 'pipeline is FAILED'
+        }
+        always {
+            echo 'pipeline is completed'
+            cleanWs()
             }
         }
     }
