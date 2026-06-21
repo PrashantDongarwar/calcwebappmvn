@@ -6,7 +6,7 @@ pipeline{
 
     }
     environment {
-        IMAGE_NAME = "calcwebappmvn:${BUILD_NUMBER}"
+        IMAGE_NAME = "prod_ecr:${BUILD_NUMBER}"
         TMPDIR = "/var/lib/jenkins/trivy-tmp"
         TRIVY_CACHE_DIR = "/var/lib/jenkins/trivy-cache"
         Region = "us-west-1"
